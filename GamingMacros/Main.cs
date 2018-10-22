@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,8 +14,75 @@ using System.Windows.Forms;
 using System.Management;
 using WindowsInput.Native;
 using WindowsInput;
+using System.Data.SQLite;
 
+ enum ShowWindowEnum
+{
+    Hide = 0,
+    ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
+    Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
+    Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
+    Restore = 9, ShowDefault = 10, ForceMinimized = 11
+};
 
+public static class DataAccess
+{
+    public static void InitializeDataBase()
+    {
+        using (SQLiteConnection db = new SQLiteConnection("DataSource=macros.db"))
+        {
+            db.Open();
+
+            String tableCommand = "CREATE TABLE IF NOT " +
+                "EXISTS Macros (Primary_Key INTEGER PRIMARY KEY, " +
+                "Text_Entry NVARCHAR(2048) NULL)";
+            SQLiteCommand createTable = new SQLiteCommand(tableCommand, db);
+            createTable.ExecuteReader();
+        }
+    }
+
+    public static void AddData(string inputText)
+    {
+        using (SQLiteConnection db = new SQLiteConnection("DataSource=macros.db"))
+        {
+            db.Open();
+
+            SQLiteCommand insertCommand = new SQLiteCommand();
+            insertCommand.Connection = db;
+
+            insertCommand.CommandText = "INSERT INTO Macros VALUES (NULL, @Entry);";
+            insertCommand.Parameters.AddWithValue("@Entry", inputText);
+
+            insertCommand.ExecuteReader();
+            db.Close();
+        }
+    }
+
+    public static List<String> GetData()
+    {
+        List<String> entries = new List<string>();
+
+        using (SQLiteConnection db =
+            new SQLiteConnection("DataSource=macros.db"))
+        {
+            db.Open();
+
+            SQLiteCommand selectCommand = new SQLiteCommand
+                ("SELECT Text_Entry from Macros", db);
+
+            SQLiteDataReader query = selectCommand.ExecuteReader();
+
+            while (query.Read())
+            {
+                entries.Add(query.GetString(0));
+            }
+
+            db.Close();
+        }
+
+        return entries;
+    }
+}
 
 namespace GamingMacros
 {
@@ -25,7 +93,8 @@ namespace GamingMacros
         private Process targetProcess = null;
         private Thread workerThread;
         private InputSimulator sendInput = new InputSimulator();
-        
+        private List<Process> programs = new List<Process>();
+       
 
         public Main()
         {
@@ -34,10 +103,33 @@ namespace GamingMacros
             MouseHook.MouseAction += new EventHandler(MouseWasClicked);
 
             InitializeComponent();
+
+            DataAccess.InitializeDataBase();
+
+            DataAccess.AddData("test");
+            
             
             this.macroRunning = false;
             workerThread = new Thread(this.AFKWorker);
             workerThread.Priority = ThreadPriority.Lowest;
+
+            //get all open programs on computer
+            foreach(Process p in Process.GetProcesses())
+            {
+                bool unique = true;
+                for (int i = 0; i < this.programs.Count;i++)
+                {
+                    if (this.programs[i].ProcessName == p.ProcessName)
+                    {
+                        unique = false;
+                    }
+                }
+                if (unique)
+                {
+                    this.programs.Add(p);
+                }
+            }
+            this.populateProgramBox();
             
         }
 
@@ -57,6 +149,49 @@ namespace GamingMacros
         //simulates key presses
         [DllImport("user32.dll")]
         static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, int dwExtraInfo);
+
+        //sends message to specified window pointer to by intptr
+        [DllImport("User32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int uMsg, int wParam, string lParam);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern int SetForegroundWindow(IntPtr hwnd);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        private static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
+
+
+        private void populateProgramBox()
+        {
+            
+
+            //sort alphabetically
+            for (int i = 0; i < this.programs.Count - 1;i++)
+            {
+                int min = i;
+                for (int j = i + 1; j < this.programs.Count;j++)
+                {
+                    if (string.Compare(this.programs[j].ProcessName,this.programs[i].ProcessName) < 0)
+                    {
+                        min = j;
+                    }
+                }
+
+                if (min != i)
+                {
+                    Process temp = this.programs[i];
+                    this.programs[i] = this.programs[min];
+                    this.programs[min] = temp;
+                }
+            }
+
+            foreach (Process p in this.programs)
+            {
+
+                this.ProgramListBox.Items.Add(p.ProcessName);
+            }
+        }
 
 
         /*
@@ -99,9 +234,11 @@ namespace GamingMacros
                                       VirtualKeyCode.VK_D,};
             //keeps track of what index keys is on
             int counter = 0;
+
             
+
             //loop w,a,s,d
-            while(this.macroRunning == true)
+            while (this.macroRunning == true)
             {
                 //end loop if button pressed
                 if (!this.macroRunning)
@@ -110,7 +247,8 @@ namespace GamingMacros
                 }
 
                 //press current keys index for KEY_REPS time
-                for (int i = 0; i < KEY_REPS && this.macroRunning == true;i++) {
+                for (int i = 0; i < KEY_REPS && this.macroRunning == true; i++)
+                {
                     if (!this.macroRunning)
                     {
                         return;
@@ -120,17 +258,19 @@ namespace GamingMacros
                     this.sendInput.Keyboard.KeyDown(keys[counter]);
                     Thread.Sleep(KEY_INTERVAL);
                     this.sendInput.Keyboard.KeyUp(keys[counter]);
+
+
                 }
 
                 //go to next element or return back to first
                 counter = (counter + 1) % (keys.Length);
-                
-                
+
+
 
             }
 
 
-            
+
 
         }
 
@@ -186,6 +326,9 @@ namespace GamingMacros
             //macro off
             else
             {
+
+                
+
                 this.macroRunning = true;
                 this.startBtn.Text = "Stop";
                 
@@ -197,6 +340,9 @@ namespace GamingMacros
         //starts or resumes the worker thread to start macro algorithm
         private void startMacro()
         {
+
+            
+
             if (this.workerThread.ThreadState == System.Threading.ThreadState.Suspended)
             {
                 this.workerThread.Resume();
@@ -223,10 +369,97 @@ namespace GamingMacros
         {
             Process p = this.GetForegroundProcessName();
             this.targetProcess = p;
+
             
+
         }
 
+        private void label2_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void programEnterBtn_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = this.ProgramListBox.SelectedIndex;
+            string selectedItem = this.ProgramListBox.SelectedItem.ToString();
+
+            if (selectedIndex < 0 || selectedIndex > this.programs.Count)
+            {
+                return;
+            }
+            this.label1.Text = "Selected  " + selectedItem;
+            Process selectedProcess = null;
+
+            foreach(Process p in this.programs)
+            {
+                if (p.ProcessName == selectedItem)
+                {
+                    selectedProcess = p;
+                }
+            }
+
+            if (selectedProcess != null)
+            {
+                Console.WriteLine("not null " + selectedProcess.ProcessName);
+                this.targetProcess = selectedProcess;
+
+                //shift focus to selected program
+                //ShowWindow(this.targetProcess.Handle, ShowWindowEnum.ShowNormal);
+                if (this.targetProcess.MainWindowHandle == IntPtr.Zero)
+                {
+                    // the window is hidden so try to restore it before setting focus.
+                    ShowWindow(this.targetProcess.Handle, ShowWindowEnum.Restore);
+                }
+
+                // set user the focus to the window
+                SetForegroundWindow(this.targetProcess.MainWindowHandle);
+            }
+            
+
+
+        }
+
+        private void ProgramSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            string val = this.ProgramSearchBox.Text;
+
+            this.ProgramListBox.Items.Clear();
+
+            for (int i = 0; i < this.programs.Count;i++)
+            {
+                if (this.programs[i].ProcessName.ToLower().Contains(val))
+                {
+                    this.ProgramListBox.Items.Add(this.programs[i].ProcessName);
+                }
+            }
+        }
+
+        private void ProgramSearchBox_Click(object sender, EventArgs e)
+        {
+            string value = this.ProgramSearchBox.Text;
+
+            if (value == "Search")
+            {
+                this.ProgramSearchBox.Text = "";
+            }
+        }
+
+        private void StartMacroButton_Click(object sender, EventArgs e)
+        {
+            this.macroKeys.Visible = !this.macroKeys.Visible;
+
+            List<string> m = DataAccess.GetData();
+
+            if (m.Count > 0)
+            {
+                this.label1.Text = m[0];
+            }
+            else
+            {
+                this.label1.Text = "no data found";
+            }
+        }
     }
 }
 

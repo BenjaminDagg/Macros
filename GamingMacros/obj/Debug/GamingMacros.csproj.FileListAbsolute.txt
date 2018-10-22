@@ -7,7 +7,6 @@ C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.cspro
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.csproj.CoreCompileInputs.cache
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.exe
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.pdb
-C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.Main.resources
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\WindowsInput.dll
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\Microsoft.Win32.Primitives.dll
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\netstandard.dll
@@ -107,3 +106,11 @@ C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\System.Xml.XPath.d
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\System.Xml.XPath.XDocument.dll
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.exe.config
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.csproj.CopyComplete
+C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\EntityFramework.dll
+C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\EntityFramework.SqlServerCompact.dll
+C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\System.Data.SqlServerCe.dll
+C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\System.Data.SQLite.dll
+C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\DataAccess.resources
