@@ -48,7 +48,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
+            this.label1.Text = "";
             // 
             // startBtn
             // 
@@ -59,6 +59,7 @@
             this.startBtn.Text = "Start";
             this.startBtn.UseVisualStyleBackColor = true;
             this.startBtn.Click += new System.EventHandler(this.StartBtn_Click);
+            
             // 
             // tableLayoutPanel1
             // 
@@ -137,6 +138,7 @@
             this.label3.Text = "Record Macro";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label3.UseMnemonic = false;
+            this.label3.Visible = false;
             // 
             // StartMacroButton
             // 
@@ -148,6 +150,7 @@
             this.StartMacroButton.Text = "Start";
             this.StartMacroButton.UseVisualStyleBackColor = true;
             this.StartMacroButton.Click += new System.EventHandler(this.StartMacroButton_Click);
+            this.StartMacroButton.Visible = false;
             // 
             // macroKeys
             // 
@@ -169,7 +172,8 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.KeyPreview = true;
             this.Name = "Main";
-            this.Text = "Form1";
+            this.Text = "Macros";
+            
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_KeyPress);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Main_KeyPressEvent);
             this.tableLayoutPanel1.ResumeLayout(false);

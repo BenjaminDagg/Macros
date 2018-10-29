@@ -16,73 +16,6 @@ using WindowsInput.Native;
 using WindowsInput;
 using System.Data.SQLite;
 
- enum ShowWindowEnum
-{
-    Hide = 0,
-    ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
-    Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
-    Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
-    Restore = 9, ShowDefault = 10, ForceMinimized = 11
-};
-
-public static class DataAccess
-{
-    public static void InitializeDataBase()
-    {
-        using (SQLiteConnection db = new SQLiteConnection("DataSource=macros.db"))
-        {
-            db.Open();
-
-            String tableCommand = "CREATE TABLE IF NOT " +
-                "EXISTS Macros (Primary_Key INTEGER PRIMARY KEY, " +
-                "Text_Entry NVARCHAR(2048) NULL)";
-            SQLiteCommand createTable = new SQLiteCommand(tableCommand, db);
-            createTable.ExecuteReader();
-        }
-    }
-
-    public static void AddData(string inputText)
-    {
-        using (SQLiteConnection db = new SQLiteConnection("DataSource=macros.db"))
-        {
-            db.Open();
-
-            SQLiteCommand insertCommand = new SQLiteCommand();
-            insertCommand.Connection = db;
-
-            insertCommand.CommandText = "INSERT INTO Macros VALUES (NULL, @Entry);";
-            insertCommand.Parameters.AddWithValue("@Entry", inputText);
-
-            insertCommand.ExecuteReader();
-            db.Close();
-        }
-    }
-
-    public static List<String> GetData()
-    {
-        List<String> entries = new List<string>();
-
-        using (SQLiteConnection db =
-            new SQLiteConnection("DataSource=macros.db"))
-        {
-            db.Open();
-
-            SQLiteCommand selectCommand = new SQLiteCommand
-                ("SELECT Text_Entry from Macros", db);
-
-            SQLiteDataReader query = selectCommand.ExecuteReader();
-
-            while (query.Read())
-            {
-                entries.Add(query.GetString(0));
-            }
-
-            db.Close();
-        }
-
-        return entries;
-    }
-}
 
 namespace GamingMacros
 {
@@ -245,6 +178,11 @@ namespace GamingMacros
                 {
                     return;
                 }
+
+                //melee
+                this.sendInput.Keyboard.KeyDown(VirtualKeyCode.VK_C);
+                Thread.Sleep(KEY_INTERVAL);
+                this.sendInput.Keyboard.KeyUp(VirtualKeyCode.VK_C);
 
                 //press current keys index for KEY_REPS time
                 for (int i = 0; i < KEY_REPS && this.macroRunning == true; i++)
@@ -809,6 +747,75 @@ public struct INPUT
     public KEYBDINPUT ki;
     [FieldOffset(4)] //*
     public HARDWAREINPUT hi;
+}
+
+
+enum ShowWindowEnum
+{
+    Hide = 0,
+    ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
+    Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
+    Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
+    Restore = 9, ShowDefault = 10, ForceMinimized = 11
+};
+
+public static class DataAccess
+{
+    public static void InitializeDataBase()
+    {
+        using (SQLiteConnection db = new SQLiteConnection("DataSource=macros.db"))
+        {
+            db.Open();
+
+            String tableCommand = "CREATE TABLE IF NOT " +
+                "EXISTS Macros (Primary_Key INTEGER PRIMARY KEY, " +
+                "Text_Entry NVARCHAR(2048) NULL)";
+            SQLiteCommand createTable = new SQLiteCommand(tableCommand, db);
+            createTable.ExecuteReader();
+        }
+    }
+
+    public static void AddData(string inputText)
+    {
+        using (SQLiteConnection db = new SQLiteConnection("DataSource=macros.db"))
+        {
+            db.Open();
+
+            SQLiteCommand insertCommand = new SQLiteCommand();
+            insertCommand.Connection = db;
+
+            insertCommand.CommandText = "INSERT INTO Macros VALUES (NULL, @Entry);";
+            insertCommand.Parameters.AddWithValue("@Entry", inputText);
+
+            insertCommand.ExecuteReader();
+            db.Close();
+        }
+    }
+
+    public static List<String> GetData()
+    {
+        List<String> entries = new List<string>();
+
+        using (SQLiteConnection db =
+            new SQLiteConnection("DataSource=macros.db"))
+        {
+            db.Open();
+
+            SQLiteCommand selectCommand = new SQLiteCommand
+                ("SELECT Text_Entry from Macros", db);
+
+            SQLiteDataReader query = selectCommand.ExecuteReader();
+
+            while (query.Read())
+            {
+                entries.Add(query.GetString(0));
+            }
+
+            db.Close();
+        }
+
+        return entries;
+    }
 }
 
 
