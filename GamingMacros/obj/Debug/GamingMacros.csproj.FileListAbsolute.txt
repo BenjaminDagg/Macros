@@ -113,3 +113,4 @@ C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.cspro
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.csproj.CopyComplete
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.exe
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.pdb
+C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Debug\GamingMacros.csprojAssemblyReference.cache

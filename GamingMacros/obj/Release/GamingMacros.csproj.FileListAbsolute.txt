@@ -106,7 +106,6 @@ C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Release\System.Xml.XmlSe
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Release\System.Xml.XPath.dll
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\bin\Release\System.Xml.XPath.XDocument.dll
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Release\GamingMacros.exe.config
-C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Release\DataAccess.resources
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Release\GamingMacros.Properties.Resources.resources
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Release\GamingMacros.csproj.GenerateResource.cache
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Release\GamingMacros.csproj.CoreCompileInputs.cache
@@ -114,3 +113,4 @@ C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Release\GamingMacros.csp
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Release\GamingMacros.exe
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Release\GamingMacros.pdb
 C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Release\GamingMacros.csprojAssemblyReference.cache
+C:\Users\Ben\source\repos\GamingMacros\GamingMacros\obj\Release\GamingMacros.Main.resources
